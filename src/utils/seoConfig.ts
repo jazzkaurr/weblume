@@ -96,19 +96,6 @@ export function usePageSeo(activePage: SeoPageKey): PageSeoMetadata {
   const seoData = WEBLUME_SEO_MAP[activePage] || WEBLUME_SEO_MAP.home;
 
   useEffect(() => {
-    // Enforce HTTPS in browser when accessed on a public custom domain over HTTP
-    if (
-      typeof window !== 'undefined' &&
-      window.location.protocol === 'http:' &&
-      window.location.hostname !== 'localhost' &&
-      window.location.hostname !== '127.0.0.1'
-    ) {
-      window.location.replace(
-        `https://${window.location.host}${window.location.pathname}${window.location.search}${window.location.hash}`
-      );
-      return;
-    }
-
     document.title = seoData.title;
 
     upsertMetaTag('name', 'description', seoData.description);
