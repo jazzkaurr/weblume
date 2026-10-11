@@ -570,7 +570,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({
   onSaveProfile,
 }) => {
   const [formState, setFormState] = useState<ProfileConfig>(profile);
-  const [activeTab, setActiveTab] = useState<'profile' | 'inquiries'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'inquiries' | 'https-dns'>('profile');
   const [inquiries, setInquiries] = useState<
     Array<{
       id: string;
@@ -627,7 +627,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({
     >
       <div className="relative w-full max-w-2xl rounded-2xl border border-[#E4DFD7] dark:border-[#242033] bg-[#FAF8F5] dark:bg-[#100E18] text-[#14121A] dark:text-[#F7F5FA] shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E4DFD7] dark:border-[#242033] bg-white dark:bg-[#0B0912]">
-          <div className="flex items-center gap-2 bg-[#F3EFEA] dark:bg-[#161324] p-1 rounded-lg">
+          <div className="flex flex-wrap items-center gap-1.5 bg-[#F3EFEA] dark:bg-[#161324] p-1 rounded-lg">
             <button
               type="button"
               onClick={() => setActiveTab('profile')}
@@ -637,7 +637,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({
                   : 'text-[#534E5E] dark:text-[#B8B2C8] hover:text-[#14121A] dark:hover:text-white'
               }`}
             >
-              Contact &amp; Brand Settings
+              Contact &amp; Brand
             </button>
             <button
               type="button"
@@ -648,7 +648,18 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({
                   : 'text-[#534E5E] dark:text-[#B8B2C8] hover:text-[#14121A] dark:hover:text-white'
               }`}
             >
-              Submitted Inquiries ({inquiries.length})
+              Inquiries ({inquiries.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('https-dns')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${
+                activeTab === 'https-dns'
+                  ? 'bg-white dark:bg-[#242033] text-[#14121A] dark:text-white shadow-xs'
+                  : 'text-[#534E5E] dark:text-[#B8B2C8] hover:text-[#14121A] dark:hover:text-white'
+              }`}
+            >
+              Enforce HTTPS &amp; DNS
             </button>
           </div>
           <button
@@ -660,7 +671,42 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({
           </button>
         </div>
 
-        {activeTab === 'profile' ? (
+        {activeTab === 'https-dns' ? (
+          <div className="p-6 overflow-y-auto space-y-4 text-xs leading-relaxed">
+            <div className="p-4 rounded-xl border border-rose-500/40 bg-rose-500/10 space-y-1.5">
+              <div className="font-bold text-rose-700 dark:text-rose-300 text-sm">
+                Why “Enforce HTTPS” Is Blocked on Your Domain
+              </div>
+              <p className="text-[#534E5E] dark:text-[#B8B2C8]">
+                Your GoDaddy DNS table currently contains an extra <strong className="font-mono-tabular text-[#14121A] dark:text-white">A | @ | Parked</strong> record alongside GitHub’s 4 IP addresses. When Let’s Encrypt attempts to verify your domain to issue the SSL certificate, GoDaddy’s <strong className="font-mono-tabular">Parked</strong> IP intercepts the check and blocks HTTPS activation.
+              </p>
+            </div>
+
+            <div className="space-y-2.5">
+              <h4 className="text-sm font-bold text-[#14121A] dark:text-[#F7F5FA]">
+                Fix in GoDaddy DNS (Keep “www” Untouched for Your Other Website)
+              </h4>
+              <div className="p-3.5 rounded-xl border border-[#E4DFD7] dark:border-[#242033] bg-white dark:bg-[#0B0912] space-y-2 font-mono-tabular">
+                <div className="text-rose-600 dark:text-rose-400 font-semibold">
+                  1. ONLY DELETE THIS RECORD (Leave “www” as-is!):
+                </div>
+                <div>Type: A | Name: @ | Value: Parked (Delete this row only!)</div>
+                <div className="pt-2 text-emerald-600 dark:text-emerald-400 font-semibold">
+                  2. OPTION A — Using Root Domain (weblume.site):
+                </div>
+                <div>Keep the 4 GitHub A records (@ → 185.199.108-111.153) and set GitHub Custom Domain to: weblume.site</div>
+                <div className="pt-2 text-violet-600 dark:text-violet-400 font-semibold">
+                  3. OPTION B — Using Your “web” Subdomain (web.weblume.site):
+                </div>
+                <div>Since you already have CNAME | web | jazzkaurr.github.io., set GitHub Custom Domain to: web.weblume.site (instant SSL without touching @ or www!)</div>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-[#5B21B6]/30 dark:border-[#C4B5FD]/30 bg-[#EDE9FE]/50 dark:bg-[#7C3AED]/10 text-[#14121A] dark:text-[#F7F5FA]">
+              <strong>App-Level HTTPS Already Active:</strong> We have also enabled <code className="font-mono-tabular">Strict-Transport-Security (HSTS)</code>, <code className="font-mono-tabular">upgrade-insecure-requests</code>, automatic HTTP→HTTPS redirects, and <code className="font-mono-tabular">/public/CNAME</code> inside this codebase.
+            </div>
+          </div>
+        ) : activeTab === 'profile' ? (
           <form onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>

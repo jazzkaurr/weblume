@@ -88,9 +88,24 @@ async function startServer() {
   const PORT = 3000;
 
   app.disable('x-powered-by');
+  app.set('trust proxy', 1);
 
-  // Security headers middleware
-  app.use((_req, res, next) => {
+  // Enforce HTTPS & Security headers middleware
+  app.use((req, res, next) => {
+    const forwardedProto = req.headers['x-forwarded-proto'];
+    if (
+      process.env.NODE_ENV === 'production' &&
+      forwardedProto &&
+      forwardedProto !== 'https'
+    ) {
+      res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+      return;
+    }
+
+    res.setHeader(
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
+    );
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('X-XSS-Protection', '1; mode=block');
