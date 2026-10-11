@@ -55,9 +55,32 @@
       }
     </script>
   </head>
-  <body class="bg-[#070709] text-[#F4F4F6] antialiased selection:bg-[#7C3AED] selection:text-white">
+  <body class="bg-[#06050A] text-[#F7F5FA] antialiased selection:bg-[#7C3AED] selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Automatic fallback if GitHub Pages is configured to "Deploy from a branch (root)"
+      // instead of serving /dist/index.html:
+      (function () {
+        var host = window.location.hostname;
+        if (host.indexOf('weblume') !== -1 || host.indexOf('github.io') !== -1) {
+          setTimeout(function () {
+            var root = document.getElementById('root');
+            if (root && root.children.length === 0) {
+              var link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = './assets/index.css';
+              document.head.appendChild(link);
+
+              var script = document.createElement('script');
+              script.type = 'module';
+              script.src = './assets/app.js';
+              document.body.appendChild(script);
+            }
+          }, 150);
+        }
+      })();
+    </script>
   </body>
 </html>
 
