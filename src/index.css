@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Luxury Light Palette — Silk Alabaster, Warm Cashmere & Imperial Amethyst */
+    --bg-canvas: #FAF8F5;
+    --bg-elevated: #FFFFFF;
+    --bg-subtle: #F3EFEA;
+    --border-hairline: #E4DFD7;
+    --border-accent: rgba(91, 33, 182, 0.35);
+    --text-primary: #14121A;
+    --text-secondary: #534E5E;
+    --text-muted: #7C7589;
+    --accent-primary: #5B21B6;
+    --accent-hover: #4C1D95;
+    --accent-soft: #EDE9FE;
+    --accent-champagne: #6D28D9;
+  }
+
+  .dark {
+    /* Luxury Dark Palette — Velvet Obsidian, Nocturne Onyx & Royal Amethyst Champagne */
+    --bg-canvas: #06050A;
+    --bg-elevated: #100E18;
+    --bg-subtle: #0B0912;
+    --border-hairline: #242033;
+    --border-accent: rgba(196, 181, 253, 0.35);
+    --text-primary: #F7F5FA;
+    --text-secondary: #B8B2C8;
+    --text-muted: #7E7791;
+    --accent-primary: #7C3AED;
+    --accent-hover: #8B5CF6;
+    --accent-soft: rgba(124, 58, 237, 0.14);
+    --accent-champagne: #DDD6FE;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+.font-serif-editorial {
+  font-family: var(--font-serif);
+}
+
+.font-mono-tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.headline-balance {
+  text-wrap: balance;
+}
